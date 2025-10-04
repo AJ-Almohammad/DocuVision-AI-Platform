@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.venv/
+.env
+.venv
+.env.local
+.env.production
+
+# Azure
+*.pem
+*.pfx
+*.cer
+*.crt
+*.key
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# macOS
+.DS_Store
+
+# Secrets - EXTRA PROTECTION
+secrets.*
+*.env*
+config/secrets.*
+connection_strings.*
