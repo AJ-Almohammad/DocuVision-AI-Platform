@@ -57,14 +57,54 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-# Initialize services
-try:
-    storage_client = AzureStorageClient()
-    doc_processor = DocumentProcessor()
-    services_available = True
-except Exception as e:
-    logger.warning(f"Azure services not available: {e}")
-    services_available = False
+# # ISSUE: Initializing Azure clients at module import time blocks startup
+# # This causes Azure health probes to timeout before the app can respond
+# try:
+#     storage_client = AzureStorageClient()
+#     doc_processor = DocumentProcessor()
+#     services_available = True
+# except Exception as e:
+#     logger.warning(f"Azure services not available: {e}")
+#     services_available = False
+
+# FIXED: Use lazy initialization - clients are created only when first needed
+# This prevents blocking the app startup
+_storage_client = None
+_doc_processor = None
+_services_available = None
+
+def get_storage_client():
+    """Lazy initialization of storage client"""
+    global _storage_client, _services_available
+    if _storage_client is None:
+        try:
+            _storage_client = AzureStorageClient()
+            _services_available = True
+        except Exception as e:
+            logger.warning(f"Azure Storage not available: {e}")
+            _services_available = False
+    return _storage_client
+
+def get_doc_processor():
+    """Lazy initialization of document processor"""
+    global _doc_processor, _services_available
+    if _doc_processor is None:
+        try:
+            _doc_processor = DocumentProcessor()
+            _services_available = True
+        except Exception as e:
+            logger.warning(f"Document Processor not available: {e}")
+            _services_available = False
+    return _doc_processor
+
+def are_services_available():
+    """Check if Azure services are available"""
+    global _services_available
+    if _services_available is None:
+        # Try to initialize to check availability
+        get_storage_client()
+        get_doc_processor()
+    return _services_available if _services_available is not None else False
 
 # Authentication endpoints
 @app.post("/token", response_model=Token)
@@ -108,10 +148,15 @@ async def upload_document(
     current_user: User = Depends(get_current_active_user)
 ):
     """Upload and process a document"""
-    if not services_available:
+    # FIXED: Check services availability lazily
+    if not are_services_available():
         raise HTTPException(status_code=503, detail="Azure services not configured")
     
     try:
+        # FIXED: Get clients lazily
+        storage_client = get_storage_client()
+        doc_processor = get_doc_processor()
+        
         # Save uploaded file temporarily
         temp_path = f"temp_{file.filename}"
         with open(temp_path, "wb") as buffer:
@@ -150,7 +195,8 @@ async def upload_document(
 @app.get("/documents/list")
 async def list_documents(current_user: User = Depends(get_current_active_user)):
     """List all documents in storage"""
-    if not services_available:
+    # FIXED: Check services availability lazily
+    if not are_services_available():
         return {
             "status": "success",
             "documents": [],
@@ -159,6 +205,8 @@ async def list_documents(current_user: User = Depends(get_current_active_user)):
         }
     
     try:
+        # FIXED: Get client lazily
+        storage_client = get_storage_client()
         blobs = storage_client.list_blobs()
         documents = []
         for blob in blobs:
@@ -180,8 +228,13 @@ async def list_documents(current_user: User = Depends(get_current_active_user)):
 async def system_health():
     """Check system health"""
     try:
-        storage_healthy = storage_client.test_connection() if services_available else False
-        ai_healthy = doc_processor.test_connection() if services_available else False
+        # FIXED: Get clients lazily and handle None case
+        storage_client = get_storage_client()
+        doc_processor = get_doc_processor()
+        services_available = are_services_available()
+        
+        storage_healthy = storage_client.test_connection() if storage_client and services_available else False
+        ai_healthy = doc_processor.test_connection() if doc_processor and services_available else False
         
         return {
             "status": "healthy" if (storage_healthy and ai_healthy) or not services_available else "degraded",
@@ -204,7 +257,9 @@ async def system_health():
 async def system_metrics(current_user: User = Depends(get_current_active_user)):
     """Get system metrics"""
     try:
-        if services_available:
+        # FIXED: Check and get services lazily
+        if are_services_available():
+            storage_client = get_storage_client()
             blobs = storage_client.list_blobs()
             total_size = sum(blob.size for blob in blobs)
             storage_info = {
@@ -267,4 +322,4 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)# Deployment trigger
+    uvicorn.run(app, host="0.0.0.0", port=8001)
