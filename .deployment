@@ -1,2 +1,3 @@
 [config]
-command = pip install -r requirements.txt && gunicorn --bind=0.0.0.0:8001 --chdir ./src/api simple_main:app
+SCM_COMMAND_IDLE_TIMEOUT = 600
+command = python -m pip install -r requirements.txt && gunicorn --bind=0.0.0.0:8001 --chdir ./src/api simple_main:app
