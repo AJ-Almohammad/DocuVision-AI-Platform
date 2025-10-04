@@ -38,6 +38,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# CRITICAL: Ultra-simple health check MUST be first endpoint
+# Azure startup probe needs instant response with ZERO dependencies
+# This endpoint has no auth, no Azure services, no logging - just returns JSON
+@app.get("/health")
+async def health_check():
+    """Immediate health check with zero dependencies for Azure startup probe"""
+    return {"status": "healthy"}
+
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -226,7 +234,7 @@ async def list_documents(current_user: User = Depends(get_current_active_user)):
 # System monitoring endpoints
 @app.get("/system/health")
 async def system_health():
-    """Check system health"""
+    """Check system health with Azure service status"""
     try:
         # FIXED: Get clients lazily and handle None case
         storage_client = get_storage_client()
