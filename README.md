@@ -11,7 +11,42 @@
 
 **Transform documents into actionable intelligence with AI-powered processing, real-time analytics, and enterprise-grade security**
 
-[🚀 Live Demo](#-live-demo) • [📖 Documentation](#-table-of-contents) • [⚡ Quick Start](#-quick-start) • [🏗️ Architecture](#-architecture)
+---
+
+## 🚀 Live Demo
+
+### 🎪 **Experience the Platform**
+
+<table>
+<tr>
+<td align="center" width="50%">
+<img src="https://img.shields.io/badge/🌐-LIVE%20DASHBOARD-success?style=for-the-badge" alt="Live Dashboard"/>
+
+### 📊 Interactive Dashboard
+**Real-time analytics & monitoring**
+
+[**Launch Dashboard →**](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app)
+
+*Features: Live metrics • Cost tracking • Performance graphs*
+
+</td>
+<td align="center" width="50%">
+<img src="https://img.shields.io/badge/📂-PROJECT%20PORTFOLIO-blue?style=for-the-badge" alt="Portfolio"/>
+
+### 📋 Project Portfolio
+**Complete documentation & architecture**
+
+[**View Portfolio →**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html?raw=true)
+
+*Features: Architecture diagrams • Technical specs • Case studies*
+
+</td>
+</tr>
+</table>
+
+---
+
+[📖 Documentation](#-table-of-contents) • [⚡ Quick Start](#-quick-start) • [🏗️ Architecture](#-architecture)
 
 ---
 
@@ -54,44 +89,7 @@ Built-in Azure AD integration, encrypted storage, and comprehensive audit loggin
 </tr>
 </table>
 
----
 
-## 🚀 Live Demo
-
-<div align="center">
-
-### 🎪 **Experience the Platform**
-
-<table>
-<tr>
-<td align="center" width="50%">
-<img src="https://img.shields.io/badge/🌐-LIVE%20DASHBOARD-success?style=for-the-badge" alt="Live Dashboard"/>
-
-### 📊 Interactive Dashboard
-**Real-time analytics & monitoring**
-
-[**Launch Dashboard →**](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app)
-
-*Features: Live metrics • Cost tracking • Performance graphs*
-
-</td>
-<td align="center" width="50%">
-<img src="https://img.shields.io/badge/📂-PROJECT%20PORTFOLIO-blue?style=for-the-badge" alt="Portfolio"/>
-
-### 📋 Project Portfolio
-**Complete documentation & architecture**
-
-[**View Portfolio →**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
-
-*Features: Architecture diagrams • Technical specs • Case studies*
-
-</td>
-</tr>
-</table>
-
-</div>
-
----
 
 ## ✨ Core Features
 
