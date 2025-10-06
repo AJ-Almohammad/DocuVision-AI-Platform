@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SecureDoc AI - Document Processing Platform Dashboard
-Enhanced with Dark Glowing Theme & Animations
+Enhanced with Premium Dark Theme & Fixed Header Styling
 """
 import streamlit as st
 import pandas as pd
@@ -28,7 +28,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Glowing Dark Theme CSS with Animations
+# Enhanced Dark Theme CSS with Better Headers
 st.markdown("""
 <style>
     /* Main dark theme */
@@ -64,36 +64,84 @@ st.markdown("""
         50% { transform: translateY(-20px) rotate(180deg); }
     }
     
-    /* Glowing text and elements */
-    .glow-text {
-        text-shadow: 0 0 10px rgba(102, 126, 234, 0.8), 
-                     0 0 20px rgba(102, 126, 234, 0.6),
-                     0 0 30px rgba(102, 126, 234, 0.4);
-    }
-    
-    .glow-box {
-        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3),
-                   0 0 40px rgba(102, 126, 234, 0.2),
-                   0 0 60px rgba(102, 126, 234, 0.1);
-    }
-    
-    /* Main header with animation */
+    /* Enhanced Header Styling */
     .main-header {
         font-size: 3.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #ffffff;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         font-weight: 800;
         font-family: 'Inter', sans-serif;
-        animation: glow-pulse 2s ease-in-out infinite alternate;
+        text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: header-glow 3s ease-in-out infinite alternate;
     }
     
-    @keyframes glow-pulse {
-        from { text-shadow: 0 0 10px rgba(102, 126, 234, 0.5); }
-        to { text-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 
-                         0 0 30px rgba(102, 126, 234, 0.6); }
+    @keyframes header-glow {
+        from { 
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5),
+                        0 0 20px rgba(102, 126, 234, 0.3);
+        }
+        to { 
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8),
+                        0 0 30px rgba(102, 126, 234, 0.5),
+                        0 0 40px rgba(102, 126, 234, 0.3);
+        }
+    }
+    
+    /* Section Headers - White with Glow */
+    .section-header {
+        font-size: 2.2rem;
+        color: #ffffff;
+        margin: 2.5rem 0 1.5rem 0;
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        text-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+        padding: 0.5rem 0;
+        border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        position: relative;
+        animation: section-slide 0.8s ease-out;
+    }
+    
+    @keyframes section-slide {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    .section-header::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        animation: underline-grow 1s ease-out;
+    }
+    
+    @keyframes underline-grow {
+        from { width: 0px; }
+        to { width: 100px; }
+    }
+    
+    /* Subsection Headers */
+    .subsection-header {
+        font-size: 1.6rem;
+        color: #e2e8f0;
+        margin: 2rem 0 1rem 0;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+        padding-left: 1rem;
+        border-left: 4px solid #667eea;
     }
     
     /* Premium Glass Cards */
@@ -285,22 +333,47 @@ st.markdown("""
         animation: fadeInUp 0.8s ease-out;
     }
     
-    /* Typewriter effect */
-    .typewriter {
-        overflow: hidden;
-        border-right: 2px solid #667eea;
-        white-space: nowrap;
-        animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    /* Hero subtitle styling */
+    .hero-subtitle {
+        font-size: 1.4rem;
+        color: #e2e8f0;
+        text-align: center;
+        margin-bottom: 3rem;
+        font-weight: 300;
+        line-height: 1.6;
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+        animation: fadeInUp 1s ease-out 0.5s both;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
-    @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
+    /* Card title styling */
+    .card-title {
+        font-size: 1.3rem;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
     }
     
-    @keyframes blink-caret {
-        from, to { border-color: transparent }
-        50% { border-color: #667eea; }
+    /* Text content styling */
+    .content-text {
+        color: #e2e8f0;
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+    
+    /* List styling */
+    .content-list {
+        color: #e2e8f0;
+        line-height: 1.8;
+        font-size: 1rem;
+        padding-left: 1.5rem;
+    }
+    
+    .content-list li {
+        margin-bottom: 0.5rem;
     }
 </style>
 
@@ -385,21 +458,22 @@ class SecureDocDashboard:
         }
     
     def display_hero_section(self):
-        """Display animated hero section"""
+        """Display animated hero section with proper text"""
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.markdown('<div class="main-header glow-text">🔒 SecureDoc AI Platform</div>', unsafe_allow_html=True)
+            st.markdown('<div class="main-header">🔒 SecureDoc AI Platform</div>', unsafe_allow_html=True)
             st.markdown("""
-            <div class="typewriter fade-in-up" style='color: #e2e8f0; font-size: 1.3rem; text-align: center; margin-bottom: 3rem;'>
-                Enterprise-grade document intelligence with AI-powered insights and real-time analytics
+            <div class="hero-subtitle">
+                Enterprise-grade document intelligence with AI-powered insights and real-time analytics. 
+                Process, analyze, and extract valuable information from your documents securely in the cloud.
             </div>
             """, unsafe_allow_html=True)
         
         with col2:
             st.markdown("""
-            <div class="glass-card glow-box" style='text-align: center;'>
-                <h3 style='color: white;'>🚀 Live Status</h3>
+            <div class="glass-card" style='text-align: center;'>
+                <div class="card-title">🚀 Live Status</div>
                 <div style='display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;'>
                     <span class="status-pulse" style='background: #48bb78;'></span>
                     <span style='color: #48bb78; font-weight: bold;'>Online</span>
@@ -416,10 +490,10 @@ class SecureDocDashboard:
             st.markdown(f"""
             <div class="glass-card" style='background: linear-gradient(135deg, rgba(245, 101, 101, 0.3) 0%, rgba(229, 62, 62, 0.3) 100%); border: 1px solid rgba(245, 101, 101, 0.5);'>
                 <div style='display: flex; align-items: center; gap: 1rem;'>
-                    <div style='font-size: 2rem; animation: glow-pulse 1s ease-in-out infinite alternate;'>🚨</div>
+                    <div style='font-size: 2rem; animation: pulse 1s ease-in-out infinite alternate;'>🚨</div>
                     <div>
-                        <h3 style='margin: 0; color: white;'>Budget Alert</h3>
-                        <p style='margin: 0; color: #feb2b2;'>Current spend ({budget_data['progress_percent']}%) is approaching your ${budget_data['budget_amount']} budget limit.</p>
+                        <div class="card-title">Budget Alert</div>
+                        <p class="content-text">Current spend ({budget_data['progress_percent']}%) is approaching your ${budget_data['budget_amount']} budget limit.</p>
                     </div>
                 </div>
             </div>
@@ -450,8 +524,8 @@ class SecureDocDashboard:
                 """, unsafe_allow_html=True)
     
     def display_budget_analytics(self):
-        """Display premium budget analytics with dark theme"""
-        st.markdown('<div class="section-header glow-text" style="font-size: 2rem; margin: 2rem 0;">💰 Budget & Cost Analytics</div>', unsafe_allow_html=True)
+        """Display premium budget analytics with proper headers"""
+        st.markdown('<div class="section-header">💰 Budget & Cost Analytics</div>', unsafe_allow_html=True)
         
         budget_data = self.get_budget_data()
         
@@ -475,7 +549,9 @@ class SecureDocDashboard:
                 </div>
                 """, unsafe_allow_html=True)
         
-        # Charts
+        # Charts Section
+        st.markdown('<div class="subsection-header">📈 Cost Visualization</div>', unsafe_allow_html=True)
+        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -533,17 +609,21 @@ class SecureDocDashboard:
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 font={'color': "white"},
-                legend={'font': {'color': 'white'}}
+                legend={'font': {'color': 'white'}},
+                title_font_color='white'
             )
             st.plotly_chart(fig_pie, use_container_width=True)
     
     def display_processing_analytics(self):
-        """Display premium processing analytics with dark theme"""
-        st.markdown('<div class="section-header glow-text" style="font-size: 2rem; margin: 2rem 0;">📈 Processing Analytics</div>', unsafe_allow_html=True)
+        """Display premium processing analytics with proper headers"""
+        st.markdown('<div class="section-header">📊 Processing Analytics</div>', unsafe_allow_html=True)
         
         metrics = self.get_storage_metrics()
         if not metrics:
             return
+        
+        # Performance Overview
+        st.markdown('<div class="subsection-header">🚀 Performance Overview</div>', unsafe_allow_html=True)
         
         # Quick Stats with animations
         col1, col2, col3, col4 = st.columns(4)
@@ -565,7 +645,9 @@ class SecureDocDashboard:
                 </div>
                 """, unsafe_allow_html=True)
         
-        # Charts
+        # Charts Section
+        st.markdown('<div class="subsection-header">📈 Processing Trends</div>', unsafe_allow_html=True)
+        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -581,7 +663,7 @@ class SecureDocDashboard:
                 df_trend, 
                 x='Date', 
                 y='Documents Processed',
-                title="📊 Daily Documents Processed",
+                title="Daily Documents Processed Trend",
                 line_shape='spline'
             )
             fig_trend.update_traces(
@@ -593,8 +675,9 @@ class SecureDocDashboard:
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
                 font={'color': "white"},
-                xaxis={'gridcolor': 'rgba(255,255,255,0.1)'},
-                yaxis={'gridcolor': 'rgba(255,255,255,0.1)'}
+                xaxis={'gridcolor': 'rgba(255,255,255,0.1)', 'title': 'Date'},
+                yaxis={'gridcolor': 'rgba(255,255,255,0.1)', 'title': 'Documents Processed'},
+                title_font_color='white'
             )
             st.plotly_chart(fig_trend, use_container_width=True)
         
@@ -610,7 +693,7 @@ class SecureDocDashboard:
                     df_files,
                     x='File Type',
                     y='Count',
-                    title="📁 Files by Type",
+                    title="Document Types Distribution",
                     color='Count',
                     color_continuous_scale='Viridis'
                 )
@@ -618,14 +701,46 @@ class SecureDocDashboard:
                     paper_bgcolor='rgba(0,0,0,0)',
                     plot_bgcolor='rgba(0,0,0,0)',
                     font={'color': "white"},
-                    xaxis={'gridcolor': 'rgba(255,255,255,0.1)'},
-                    yaxis={'gridcolor': 'rgba(255,255,255,0.1)'}
+                    xaxis={'gridcolor': 'rgba(255,255,255,0.1)', 'title': 'File Type'},
+                    yaxis={'gridcolor': 'rgba(255,255,255,0.1)', 'title': 'Count'},
+                    title_font_color='white'
                 )
                 st.plotly_chart(fig_bar, use_container_width=True)
+        
+        # Additional Processing Insights
+        st.markdown('<div class="subsection-header">🔍 Processing Insights</div>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="glass-card">
+                <div class="card-title">📋 Recent Activity</div>
+                <p class="content-text">
+                    • 15 documents processed in the last hour<br>
+                    • Average processing time: 2.1 seconds<br>
+                    • Peak usage: 28 documents at 14:30<br>
+                    • Success rate maintained at 99.2%
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="glass-card">
+                <div class="card-title">🎯 Performance Tips</div>
+                <p class="content-text">
+                    • Optimize document size for faster processing<br>
+                    • Use PDF format for best text extraction<br>
+                    • Batch process during off-peak hours<br>
+                    • Monitor budget usage regularly
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
     
     def display_document_processing(self):
         """Display premium document processing section"""
-        st.markdown('<div class="section-header glow-text" style="font-size: 2rem; margin: 2rem 0;">🔄 Document Processing Pipeline</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">🔄 Document Processing Pipeline</div>', unsafe_allow_html=True)
         
         # Use tabs for better organization
         tab1, tab2, tab3 = st.tabs(["🚀 Upload & Process", "📊 Pipeline Status", "💡 Quick Actions"])
@@ -635,9 +750,12 @@ class SecureDocDashboard:
             
             with col1:
                 st.markdown("""
-                <div class="glass-card glow-box">
-                    <h3 style='color: white;'>📤 Upload Documents</h3>
-                    <p style='color: #a0aec0;'>Drag and drop your documents for AI-powered processing and analysis.</p>
+                <div class="glass-card">
+                    <div class="card-title">📤 Upload Documents</div>
+                    <p class="content-text">
+                        Drag and drop your documents for AI-powered processing and analysis. 
+                        Our platform supports multiple formats and provides real-time insights.
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -659,7 +777,7 @@ class SecureDocDashboard:
                     
                     st.markdown("""
                     <div class="glass-card">
-                        <h4 style='color: white;'>📄 File Details</h4>
+                        <div class="card-title">📄 File Details</div>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -714,8 +832,8 @@ class SecureDocDashboard:
                             <div style='display: flex; align-items: center; gap: 1rem;'>
                                 <div style='font-size: 2rem;'>🎉</div>
                                 <div>
-                                    <h3 style='margin: 0; color: white;'>Processing Complete!</h3>
-                                    <p style='margin: 0; color: #c6f6d5;'>Your document has been successfully analyzed with AI.</p>
+                                    <div class="card-title">Processing Complete!</div>
+                                    <p class="content-text">Your document has been successfully analyzed with AI.</p>
                                 </div>
                             </div>
                         </div>
@@ -742,12 +860,13 @@ class SecureDocDashboard:
             with col2:
                 st.markdown("""
                 <div class="glass-card">
-                    <h3 style='color: white;'>💡 Tips</h3>
-                    <ul style='color: #a0aec0;'>
+                    <div class="card-title">💡 Tips & Best Practices</div>
+                    <ul class="content-list">
                         <li>PDF files work best for text extraction</li>
                         <li>High-resolution images improve accuracy</li>
                         <li>Enable layout analysis for complex documents</li>
                         <li>Check cost estimates before processing</li>
+                        <li>Use batch processing for multiple files</li>
                     </ul>
                 </div>
                 """, unsafe_allow_html=True)
@@ -755,8 +874,8 @@ class SecureDocDashboard:
         with tab2:
             st.markdown("""
             <div class="glass-card">
-                <h3 style='color: white;'>🔧 Pipeline Status</h3>
-                <p style='color: #a0aec0;'>Real-time monitoring of document processing pipeline</p>
+                <div class="card-title">🔧 Pipeline Status</div>
+                <p class="content-text">Real-time monitoring of document processing pipeline and system health.</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -796,8 +915,8 @@ class SecureDocDashboard:
         with tab3:
             st.markdown("""
             <div class="glass-card">
-                <h3 style='color: white;'>⚡ Quick Actions</h3>
-                <p style='color: #a0aec0;'>Frequently used operations and shortcuts</p>
+                <div class="card-title">⚡ Quick Actions</div>
+                <p class="content-text">Frequently used operations and shortcuts for efficient workflow management.</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -816,109 +935,6 @@ class SecureDocDashboard:
                 
                 if st.button("⚙️ Settings", use_container_width=True):
                     st.info("🔧 Opening configuration settings...")
-    
-    def display_system_monitoring(self):
-        """Display premium system monitoring with dark theme"""
-        st.markdown('<div class="section-header glow-text" style="font-size: 2rem; margin: 2rem 0;">🏥 System Health & Monitoring</div>', unsafe_allow_html=True)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Azure Services Status
-            st.markdown("""
-            <div class="glass-card">
-                <h3 style='color: white;'>🔧 Azure Services</h3>
-                <p style='color: #a0aec0;'>Real-time status of cloud infrastructure</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            services = [
-                {"name": "Blob Storage", "status": "healthy", "usage": "5.2 MB", "latency": "23ms"},
-                {"name": "Document Intelligence", "status": "healthy", "usage": "87%", "latency": "45ms"},
-                {"name": "App Service", "status": "developing", "usage": "Not deployed", "latency": "N/A"},
-                {"name": "Database", "status": "planned", "usage": "Q4 2024", "latency": "N/A"}
-            ]
-            
-            for i, service in enumerate(services):
-                status_config = {
-                    "healthy": {"color": "#48bb78", "icon": "✅", "pulse": True},
-                    "developing": {"color": "#ed8936", "icon": "🛠️", "pulse": False},
-                    "planned": {"color": "#a0aec0", "icon": "📅", "pulse": False}
-                }
-                
-                config = status_config[service['status']]
-                pulse_class = "status-pulse" if config['pulse'] else ""
-                
-                st.markdown(f"""
-                <div class="glass-card fade-in-up" style='animation-delay: {i * 0.1}s;'>
-                    <div style='display: flex; justify-content: space-between; align-items: center;'>
-                        <div style='display: flex; align-items: center; gap: 1rem;'>
-                            <div class="{pulse_class}" style='background: {config["color"]};'></div>
-                            <div>
-                                <div style='font-weight: bold; color: white;'>{service['name']}</div>
-                                <div style='color: #718096; font-size: 0.8rem;'>{service['usage']} • {service['latency']}</div>
-                            </div>
-                        </div>
-                        <div style='color: {config["color"]}; font-weight: bold;'>{config["icon"]}</div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        with col2:
-            # Performance Metrics
-            st.markdown("""
-            <div class="glass-card">
-                <h3 style='color: white;'>📊 Performance Metrics</h3>
-                <p style='color: #a0aec0;'>System performance and response times</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            performance_data = {
-                'Metric': ['API Response', 'Document Processing', 'Upload Speed', 'AI Analysis', 'Storage I/O'],
-                'Value': ['48ms', '2.1s', '4.2 MB/s', '1.8s', '12ms'],
-                'Trend': ['↘️ Improving', '→ Stable', '↗️ Improving', '→ Stable', '↘️ Improving']
-            }
-            df_perf = pd.DataFrame(performance_data)
-            
-            # Custom dataframe styling for dark theme
-            st.dataframe(
-                df_perf,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "Metric": st.column_config.TextColumn("Metric", width="medium"),
-                    "Value": st.column_config.TextColumn("Value", width="small"),
-                    "Trend": st.column_config.TextColumn("Trend", width="medium")
-                }
-            )
-            
-            # Security Status
-            st.markdown("""
-            <div class="glass-card">
-                <h3 style='color: white;'>🔒 Security Status</h3>
-                <p style='color: #a0aec0;'>Security controls and compliance</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            security_items = [
-                ("SAS Tokens", "✅ Active", "1hr expiry"),
-                ("Encryption", "✅ Enabled", "AES-256"),
-                ("Access Control", "✅ Configured", "RBAC"),
-                ("Audit Logs", "🛠️ Developing", "Q4 2024")
-            ]
-            
-            for i, (item, status, details) in enumerate(security_items):
-                st.markdown(f"""
-                <div class="glass-card fade-in-up" style='padding: 1rem; margin: 0.5rem 0; animation-delay: {i * 0.1}s;'>
-                    <div style='display: flex; justify-content: space-between; align-items: center;'>
-                        <div style='font-weight: bold; color: white;'>{item}</div>
-                        <div style='display: flex; gap: 1rem; align-items: center;'>
-                            <div style='color: #48bb78;'>{status}</div>
-                            <div style='color: #718096; font-size: 0.8rem;'>{details}</div>
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
 
 def main():
     dashboard = SecureDocDashboard()
@@ -927,7 +943,7 @@ def main():
     with st.sidebar:
         st.markdown("""
         <div style='text-align: center; margin-bottom: 2rem; padding: 2rem 1rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%); border-radius: 20px; border: 1px solid rgba(102, 126, 234, 0.3);'>
-            <h1 style='font-size: 3rem; margin: 0;' class="glow-text">🔒</h1>
+            <h1 style='font-size: 3rem; margin: 0; color: white; text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);'>🔒</h1>
             <h2 style='margin: 0; color: white;'>SecureDoc AI</h2>
             <p style='opacity: 0.9; margin: 0; color: #a0aec0;'>Premium Platform</p>
         </div>
@@ -937,7 +953,7 @@ def main():
         st.markdown("### 🧭 Navigation")
         section = st.radio(
             "Choose a section:",
-            ["📊 Overview", "💰 Budget Analytics", "📈 Processing Analytics", "🔄 Document Processing", "🏥 System Health"],
+            ["📊 Overview", "💰 Budget Analytics", "📊 Processing Analytics", "🔄 Document Processing", "🏥 System Health"],
             label_visibility="collapsed"
         )
         
@@ -987,7 +1003,7 @@ def main():
         dashboard.display_processing_analytics()
     elif section == "💰 Budget Analytics":
         dashboard.display_budget_analytics()
-    elif section == "📈 Processing Analytics":
+    elif section == "📊 Processing Analytics":
         dashboard.display_processing_analytics()
     elif section == "🔄 Document Processing":
         dashboard.display_document_processing()

@@ -1,0 +1,10 @@
+{
+  "name": "securedoc-ai-dashboard",
+  "version": "1.0.0",
+  "description": "SecureDoc AI Dashboard - HTML Version",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'No build step required for static HTML'"
+  },
+  "dependencies": {}
+}

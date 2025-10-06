@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureDoc AI Platform</title>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            border-right: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .sidebar-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        .navigation {
+            margin: 2rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e2e8f0;
+        }
+
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-icon {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+        }
+
+        /* Headers */
+        .main-header {
+            font-size: 3.5rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: header-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes header-glow {
+            from { 
+                text-shadow: 0 0 10px rgba(102, 126, 234, 0.5),
+                            0 0 20px rgba(102, 126, 234, 0.3);
+            }
+            to { 
+                text-shadow: 0 0 20px rgba(102, 126, 234, 0.8),
+                            0 0 30px rgba(102, 126, 234, 0.5),
+                            0 0 40px rgba(102, 126, 234, 0.3);
+            }
+        }
+
+        .section-header {
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin: 2.5rem 0 1.5rem 0;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+            padding: 0.5rem 0;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            animation: section-slide 0.8s ease-out;
+        }
+
+        @keyframes section-slide {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            animation: underline-grow 1s ease-out;
+        }
+
+        @keyframes underline-grow {
+            from { width: 0px; }
+            to { width: 100px; }
+        }
+
+        .subsection-header {
+            font-size: 1.6rem;
+            color: #e2e8f0;
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+            padding-left: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        /* Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4),
+                       0 0 80px rgba(102, 126, 234, 0.2);
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            transition: all 0.4s ease;
+            animation: card-float 3s ease-in-out infinite;
+        }
+
+        @keyframes card-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Status Indicators */
+        .status-pulse {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(72, 187, 120, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(72, 187, 120, 0); }
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .tab {
+            background: transparent;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* File Upload */
+        .file-upload {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(102, 126, 234, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: rgba(102, 126, 234, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            transition: width 0.3s ease;
+        }
+
+        /* Text Styles */
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 300;
+            line-height: 1.6;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+            animation: fadeInUp 1s ease-out 0.5s both;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .content-text {
+            color: #e2e8f0;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .content-list {
+            color: #e2e8f0;
+            line-height: 1.8;
+            font-size: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .content-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-circle" style="width: 300px; height: 300px; top: 10%; left: 5%; animation-delay: 0s;"></div>
+        <div class="floating-circle" style="width: 200px; height: 200px; top: 60%; left: 80%; animation-delay: 2s;"></div>
+        <div class="floating-circle" style="width: 150px; height: 150px; top: 20%; left: 70%; animation-delay: 4s;"></div>
+        <div class="floating-circle" style="width: 250px; height: 250px; top: 70%; left: 10%; animation-delay: 1s;"></div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-icon">🔒</div>
+                <h2>SecureDoc AI</h2>
+                <p style="color: #a0aec0; margin-top: 0.5rem;">Premium Platform</p>
+            </div>
+
+            <div class="navigation">
+                <div class="nav-item active" data-section="overview">
+                    <span class="nav-icon">📊</span>
+                    <span>Overview</span>
+                </div>
+                <div class="nav-item" data-section="budget">
+                    <span class="nav-icon">💰</span>
+                    <span>Budget Analytics</span>
+                </div>
+                <div class="nav-item" data-section="processing">
+                    <span class="nav-icon">📊</span>
+                    <span>Processing Analytics</span>
+                </div>
+                <div class="nav-item" data-section="document">
+                    <span class="nav-icon">🔄</span>
+                    <span>Document Processing</span>
+                </div>
+                <div class="nav-item" data-section="system">
+                    <span class="nav-icon">🏥</span>
+                    <span>System Health</span>
+                </div>
+            </div>
+
+            <div style="margin: 2rem 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">📈 Quick Stats</h3>
+                <div class="grid">
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #667eea;">42</div>
+                        <div style="color: #a0aec0; font-size: 0.9rem;">Files</div>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #667eea;">15.7 MB</div>
+                        <div style="color: #a0aec0; font-size: 0.9rem;">Storage</div>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #667eea;">8.4%</div>
+                        <div style="color: #a0aec0; font-size: 0.9rem;">Budget Used</div>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: #667eea;">Active</div>
+                        <div style="color: #a0aec0; font-size: 0.9rem;">AI Processing</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; text-align: center; color: #718096;">
+                <p><strong style="color: white;">🔒 SecureDoc AI Premium</strong></p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">Enterprise Document Intelligence</p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">Version: 2.0.0</p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">October 2024</p>
+                <br>
+                <p style="color: white;"><strong>Contact:</strong></p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">Amer Almohammad</p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">AWS Junior Cloud Engineer</p>
+                <p style="color: #a0aec0; margin: 0.5rem 0;">📧 ajaber1973@web.de</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overview Section -->
+            <div id="overview" class="section active">
+                <div class="main-header">🔒 SecureDoc AI Platform</div>
+                <div class="hero-subtitle">
+                    Enterprise-grade document intelligence with AI-powered insights and real-time analytics. 
+                    Process, analyze, and extract valuable information from your documents securely in the cloud.
+                </div>
+
+                <div class="grid grid-2">
+                    <div class="glass-card" style="text-align: center;">
+                        <div class="card-title">🚀 Live Status</div>
+                        <div style="display: flex; justify-content: center; gap: 1rem; margin: 1rem 0;">
+                            <span class="status-pulse" style="background: #48bb78;"></span>
+                            <span style="color: #48bb78; font-weight: bold;">Online</span>
+                        </div>
+                        <p style="color: #a0aec0;">All Systems Operational</p>
+                    </div>
+                    <div class="glass-card" style="background: linear-gradient(135deg, rgba(245, 101, 101, 0.3) 0%, rgba(229, 62, 62, 0.3) 100%); border: 1px solid rgba(245, 101, 101, 0.5);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 2rem; animation: pulse 1s ease-in-out infinite alternate;">🚨</div>
+                            <div>
+                                <div class="card-title">Budget Alert</div>
+                                <p class="content-text">Current spend (8.4%) is approaching your $5.00 budget limit.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="metric-card fade-in-up" style="animation-delay: 0s;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: white;">42</div>
+                        <div style="opacity: 0.9; color: #e2e8f0;">Total Documents</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem; color: #a0aec0;">Azure Blob Storage</div>
+                    </div>
+                    <div class="metric-card fade-in-up" style="animation-delay: 0.2s;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💾</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: white;">15.7 MB</div>
+                        <div style="opacity: 0.9; color: #e2e8f0;">Storage Used</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem; color: #a0aec0;">Cloud Storage</div>
+                    </div>
+                    <div class="metric-card fade-in-up" style="animation-delay: 0.4s;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💰</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: white;">$0.42</div>
+                        <div style="opacity: 0.9; color: #e2e8f0;">Current Spend</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem; color: #a0aec0;">$5.00 Budget</div>
+                    </div>
+                    <div class="metric-card fade-in-up" style="animation-delay: 0.6s;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🤖</div>
+                        <div style="font-size: 2rem; font-weight: bold; color: white;">328</div>
+                        <div style="opacity: 0.9; color: #e2e8f0;">AI Processed</div>
+                        <div style="font-size: 0.8rem; margin-top: 0.5rem; color: #a0aec0;">This Month</div>
+                    </div>
+                </div>
+
+                <div class="section-header">📊 Processing Analytics</div>
+                <!-- Processing charts will be inserted here -->
+                <div id="processing-charts"></div>
+            </div>
+
+            <!-- Budget Analytics Section -->
+            <div id="budget" class="section">
+                <div class="section-header">💰 Budget & Cost Analytics</div>
+                
+                <div class="grid grid-4">
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0s;">
+                        <div style="font-size: 2rem; color: #667eea;">📊</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: white;">$5.00</div>
+                        <div style="color: #a0aec0;">Total Budget</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.1s;">
+                        <div style="font-size: 2rem; color: #48bb78;">💸</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: white;">$0.42</div>
+                        <div style="color: #a0aec0;">Current Spend</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.2s;">
+                        <div style="font-size: 2rem; color: #ed8936;">🔮</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: white;">$0.85</div>
+                        <div style="color: #a0aec0;">Forecasted</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.3s;">
+                        <div style="font-size: 2rem; color: #48bb78;">⚡</div>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: white;">8.4%</div>
+                        <div style="color: #a0aec0;">Usage</div>
+                    </div>
+                </div>
+
+                <div class="subsection-header">📈 Cost Visualization</div>
+                <div class="grid grid-2">
+                    <div id="budget-gauge"></div>
+                    <div id="cost-pie"></div>
+                </div>
+            </div>
+
+            <!-- Processing Analytics Section -->
+            <div id="processing" class="section">
+                <div class="section-header">📊 Processing Analytics</div>
+                
+                <div class="subsection-header">🚀 Performance Overview</div>
+                <div class="grid grid-4">
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0s;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">2.1s</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem;">Avg Processing Time</div>
+                        <div style="color: #48bb78; font-size: 0.9rem;">-0.2s</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.1s;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">328</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem;">Total Processed</div>
+                        <div style="color: #48bb78; font-size: 0.9rem;">+12%</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.2s;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">28 docs</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem;">Peak Daily</div>
+                        <div style="color: #48bb78; font-size: 0.9rem;">Yesterday</div>
+                    </div>
+                    <div class="glass-card fade-in-up" style="text-align: center; animation-delay: 0.3s;">
+                        <div style="font-size: 1.2rem; font-weight: bold; color: white;">99.2%</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem;">Success Rate</div>
+                        <div style="color: #48bb78; font-size: 0.9rem;">0.3%</div>
+                    </div>
+                </div>
+
+                <div class="subsection-header">📈 Processing Trends</div>
+                <div class="grid grid-2">
+                    <div id="processing-trend"></div>
+                    <div id="file-types"></div>
+                </div>
+
+                <div class="subsection-header">🔍 Processing Insights</div>
+                <div class="grid grid-2">
+                    <div class="glass-card">
+                        <div class="card-title">📋 Recent Activity</div>
+                        <p class="content-text">
+                            • 15 documents processed in the last hour<br>
+                            • Average processing time: 2.1 seconds<br>
+                            • Peak usage: 28 documents at 14:30<br>
+                            • Success rate maintained at 99.2%
+                        </p>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-title">🎯 Performance Tips</div>
+                        <p class="content-text">
+                            • Optimize document size for faster processing<br>
+                            • Use PDF format for best text extraction<br>
+                            • Batch process during off-peak hours<br>
+                            • Monitor budget usage regularly
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Processing Section -->
+            <div id="document" class="section">
+                <div class="section-header">🔄 Document Processing Pipeline</div>
+                
+                <div class="tabs">
+                    <button class="tab active" data-tab="upload">🚀 Upload & Process</button>
+                    <button class="tab" data-tab="status">📊 Pipeline Status</button>
+                    <button class="tab" data-tab="actions">💡 Quick Actions</button>
+                </div>
+
+                <div id="upload" class="tab-content active">
+                    <div class="grid grid-2">
+                        <div>
+                            <div class="glass-card">
+                                <div class="card-title">📤 Upload Documents</div>
+                                <p class="content-text">
+                                    Drag and drop your documents for AI-powered processing and analysis. 
+                                    Our platform supports multiple formats and provides real-time insights.
+                                </p>
+                            </div>
+
+                            <div class="file-upload" id="fileUpload">
+                                <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                                <div class="card-title">Drop files here or click to upload</div>
+                                <p class="content-text">Supported formats: PDF, Text, Images, Word Documents</p>
+                                <input type="file" id="fileInput" style="display: none;" accept=".pdf,.txt,.jpg,.png,.docx">
+                            </div>
+
+                            <div id="fileInfo" style="display: none;">
+                                <div class="glass-card">
+                                    <div class="card-title">📄 File Details</div>
+                                    <div class="grid grid-3" id="fileDetails"></div>
+                                </div>
+
+                                <div class="glass-card">
+                                    <div class="card-title">⚙️ Processing Options</div>
+                                    <div class="grid grid-2">
+                                        <div>
+                                            <label style="color: #e2e8f0; display: block; margin: 0.5rem 0;">
+                                                <input type="checkbox" checked> Extract Text
+                                            </label>
+                                            <label style="color: #e2e8f0; display: block; margin: 0.5rem 0;">
+                                                <input type="checkbox" checked> Detect Tables
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label style="color: #e2e8f0; display: block; margin: 0.5rem 0;">
+                                                <input type="checkbox" checked> Analyze Layout
+                                            </label>
+                                            <label style="color: #e2e8f0; display: block; margin: 0.5rem 0;">
+                                                <input type="checkbox"> Save to Database
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button class="btn" id="processBtn">🚀 Process Document with AI</button>
+                            </div>
+
+                            <div id="processingProgress" style="display: none;">
+                                <div class="glass-card">
+                                    <div class="card-title" id="progressText">📤 Uploading to secure cloud...</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="results" style="display: none;">
+                                <div class="glass-card" style="background: linear-gradient(135deg, rgba(72, 187, 120, 0.3) 0%, rgba(56, 161, 105, 0.3) 100%); border: 1px solid rgba(72, 187, 120, 0.5);">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="font-size: 2rem;">🎉</div>
+                                        <div>
+                                            <div class="card-title">Processing Complete!</div>
+                                            <p class="content-text">Your document has been successfully analyzed with AI.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-4" id="resultMetrics"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="glass-card">
+                                <div class="card-title">💡 Tips & Best Practices</div>
+                                <ul class="content-list">
+                                    <li>PDF files work best for text extraction</li>
+                                    <li>High-resolution images improve accuracy</li>
+                                    <li>Enable layout analysis for complex documents</li>
+                                    <li>Check cost estimates before processing</li>
+                                    <li>Use batch processing for multiple files</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="status" class="tab-content">
+                    <div class="glass-card">
+                        <div class="card-title">🔧 Pipeline Status</div>
+                        <p class="content-text">Real-time monitoring of document processing pipeline and system health.</p>
+                    </div>
+                    <div id="pipelineStatus"></div>
+                </div>
+
+                <div id="actions" class="tab-content">
+                    <div class="glass-card">
+                        <div class="card-title">⚡ Quick Actions</div>
+                        <p class="content-text">Frequently used operations and shortcuts for efficient workflow management.</p>
+                    </div>
+                    <div class="grid grid-2">
+                        <button class="btn">📥 Batch Process</button>
+                        <button class="btn">🔄 Sync Storage</button>
+                        <button class="btn">📋 View Logs</button>
+                        <button class="btn">⚙️ Settings</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health Section -->
+            <div id="system" class="section">
+                <div class="section-header">🏥 System Health & Monitoring</div>
+                
+                <div class="grid grid-2">
+                    <div>
+                        <div class="glass-card">
+                            <div class="card-title">🔧 Azure Services</div>
+                            <p class="content-text">Real-time status of cloud infrastructure</p>
+                        </div>
+                        <div id="azureServices"></div>
+                    </div>
+                    <div>
+                        <div class="glass-card">
+                            <div class="card-title">📊 Performance Metrics</div>
+                            <p class="content-text">System performance and response times</p>
+                        </div>
+                        <div id="performanceMetrics"></div>
+                        
+                        <div class="glass-card">
+                            <div class="card-title">🔒 Security Status</div>
+                            <p class="content-text">Security controls and compliance</p>
+                        </div>
+                        <div id="securityStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // File Upload
+        const fileUpload = document.getElementById('fileUpload');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileDetails = document.getElementById('fileDetails');
+
+        fileUpload.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                const fileSize = (file.size / 1024).toFixed(1);
+                
+                fileDetails.innerHTML = `
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="color: #667eea; font-weight: bold;">Name</div>
+                        <div style="color: white;">${file.name}</div>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="color: #667eea; font-weight: bold;">Type</div>
+                        <div style="color: white;">${file.type || 'Unknown'}</div>
+                    </div>
+                    <div class="glass-card" style="text-align: center; padding: 1rem;">
+                        <div style="color: #667eea; font-weight: bold;">Size</div>
+                        <div style="color: white;">${fileSize} KB</div>
+                    </div>
+                `;
+                
+                fileInfo.style.display = 'block';
+            }
+        });
+
+        // Process Button
+        document.getElementById('processBtn').addEventListener('click', function() {
+            const processingProgress = document.getElementById('processingProgress');
+            const progressText = document.getElementById('progressText');
+            const progressFill = document.getElementById('progressFill');
+            const results = document.getElementById('results');
+            const resultMetrics = document.getElementById('resultMetrics');
+            
+            fileInfo.style.display = 'none';
+            processingProgress.style.display = 'block';
+            
+            const steps = [
+                "📤 Uploading to secure cloud...",
+                "🔍 Analyzing document structure...",
+                "📝 Extracting text content...",
+                "📊 Identifying tables and layouts...",
+                "🎯 Generating insights..."
+            ];
+            
+            let progress = 0;
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    progress = (index + 1) * 20;
+                    progressText.textContent = step;
+                    progressFill.style.width = `${progress}%`;
+                    
+                    if (index === steps.length - 1) {
+                        setTimeout(() => {
+                            processingProgress.style.display = 'none';
+                            results.style.display = 'block';
+                            
+                            resultMetrics.innerHTML = `
+                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0s;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">5</div>
+                                    <div style="color: #a0aec0;">Pages</div>
+                                </div>
+                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.1s;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">3</div>
+                                    <div style="color: #a0aec0;">Tables</div>
+                                </div>
+                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.2s;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">142</div>
+                                    <div style="color: #a0aec0;">Lines</div>
+                                </div>
+                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.3s;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">98.2%</div>
+                                    <div style="color: #a0aec0;">Confidence</div>
+                                </div>
+                            `;
+                            
+                            // Show confetti effect
+                            showConfetti();
+                        }, 500);
+                    }
+                }, index * 1000);
+            });
+        });
+
+        // Confetti Effect
+        function showConfetti() {
+            const confettiCount = 100;
+            const colors = ['#667eea', '#764ba2', '#48bb78', '#ed8936', '#f56565'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    top: -10px;
+                    left: ${Math.random() * 100}%;
+                    animation: confetti-fall ${2 + Math.random() * 3}s linear forwards;
+                    z-index: 1000;
+                    border-radius: 2px;
+                `;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confetti-fall {
+                to {
+                    transform: translateY(100vh) rotate(${360 * 3}deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Budget Gauge
+            const budgetGauge = {
+                type: "indicator",
+                mode: "gauge+number+delta",
+                value: 8.4,
+                domain: { x: [0, 1], y: [0, 1] },
+                title: { text: "Budget Usage (%)", font: { size: 20, color: 'white' } },
+                delta: { reference: 80, increasing: { color: "red" } },
+                gauge: {
+                    axis: { range: [null, 100], tickwidth: 1, tickcolor: 'white' },
+                    bar: { color: "#667eea" },
+                    bgcolor: 'rgba(0,0,0,0.3)',
+                    borderwidth: 2,
+                    bordercolor: "rgba(255,255,255,0.2)",
+                    steps: [
+                        { range: [0, 50], color: 'rgba(72, 187, 120, 0.3)' },
+                        { range: [50, 80], color: 'rgba(237, 137, 54, 0.3)' },
+                        { range: [80, 100], color: 'rgba(245, 101, 101, 0.3)' }
+                    ],
+                    threshold: {
+                        line: { color: "red", width: 4 },
+                        thickness: 0.75,
+                        value: 80
+                    }
+                }
+            };
+
+            const gaugeLayout = {
+                height: 300,
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: "white" },
+                margin: { t: 50, b: 10, l: 10, r: 10 }
+            };
+
+            Plotly.newPlot('budget-gauge', [budgetGauge], gaugeLayout);
+
+            // Cost Pie Chart
+            const costPie = {
+                values: [0.25, 0.12, 0.03, 0.02, 0.05],
+                labels: ['Document Intelligence', 'Blob Storage', 'Networking', 'Monitoring', 'Compute'],
+                type: 'pie',
+                marker: {
+                    colors: ['#667eea', '#764ba2', '#48bb78', '#ed8936', '#f56565']
+                }
+            };
+
+            const pieLayout = {
+                title: 'Monthly Cost Distribution',
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: "white" },
+                legend: { font: { color: 'white' } },
+                height: 300
+            };
+
+            Plotly.newPlot('cost-pie', [costPie], pieLayout);
+
+            // Initialize other sections
+            initializePipelineStatus();
+            initializeAzureServices();
+            initializePerformanceMetrics();
+            initializeSecurityStatus();
+        });
+
+        function initializePipelineStatus() {
+            const pipelineSteps = [
+                { name: "File Upload", status: "completed", icon: "📤", description: "File securely uploaded" },
+                { name: "Storage", status: "completed", icon: "💾", description: "Stored in Azure Blob" },
+                { name: "AI Analysis", status: "completed", icon: "🤖", description: "AI processing complete" },
+                { name: "Data Extraction", status: "processing", icon: "🔍", description: "Extracting content" },
+                { name: "Results", status: "pending", icon: "📊", description: "Awaiting completion" }
+            ];
+
+            const pipelineContainer = document.getElementById('pipelineStatus');
+            
+            pipelineSteps.forEach((step, index) => {
+                const statusConfig = {
+                    "completed": { color: "#48bb78", icon: "✅", pulse: false },
+                    "processing": { color: "#ed8936", icon: "🔄", pulse: true },
+                    "pending": { color: "#a0aec0", icon: "⏳", pulse: false }
+                };
+                
+                const config = statusConfig[step.status];
+                const pulseClass = config.pulse ? "status-pulse" : "";
+                
+                const stepElement = document.createElement('div');
+                stepElement.className = `glass-card fade-in-up`;
+                stepElement.style.animationDelay = `${index * 0.1}s`;
+                stepElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">${step.icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; color: white;">${step.name}</div>
+                            <div style="color: ${config.color};">${step.description}</div>
+                        </div>
+                        <div class="${pulseClass}" style="background: ${config.color};"></div>
+                        <div style="color: ${config.color}; font-weight: bold;">${config.icon}</div>
+                    </div>
+                `;
+                
+                pipelineContainer.appendChild(stepElement);
+            });
+        }
+
+        function initializeAzureServices() {
+            const services = [
+                { name: "Blob Storage", status: "healthy", usage: "5.2 MB", latency: "23ms" },
+                { name: "Document Intelligence", status: "healthy", usage: "87%", latency: "45ms" },
+                { name: "App Service", status: "developing", usage: "Not deployed", latency: "N/A" },
+                { name: "Database", status: "planned", usage: "Q4 2024", latency: "N/A" }
+            ];
+
+            const servicesContainer = document.getElementById('azureServices');
+            
+            services.forEach((service, index) => {
+                const statusConfig = {
+                    "healthy": { color: "#48bb78", icon: "✅", pulse: true },
+                    "developing": { color: "#ed8936", icon: "🛠️", pulse: false },
+                    "planned": { color: "#a0aec0", icon: "📅", pulse: false }
+                };
+                
+                const config = statusConfig[service.status];
+                const pulseClass = config.pulse ? "status-pulse" : "";
+                
+                const serviceElement = document.createElement('div');
+                serviceElement.className = `glass-card fade-in-up`;
+                serviceElement.style.animationDelay = `${index * 0.1}s`;
+                serviceElement.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="${pulseClass}" style="background: ${config.color};"></div>
+                            <div>
+                                <div style="font-weight: bold; color: white;">${service.name}</div>
+                                <div style="color: #718096; font-size: 0.8rem;">${service.usage} • ${service.latency}</div>
+                            </div>
+                        </div>
+                        <div style="color: ${config.color}; font-weight: bold;">${config.icon}</div>
+                    </div>
+                `;
+                
+                servicesContainer.appendChild(serviceElement);
+            });
+        }
+
+        function initializePerformanceMetrics() {
+            const performanceData = [
+                { Metric: 'API Response', Value: '48ms', Trend: '↘️ Improving' },
+                { Metric: 'Document Processing', Value: '2.1s', Trend: '→ Stable' },
+                { Metric: 'Upload Speed', Value: '4.2 MB/s', Trend: '↗️ Improving' },
+                { Metric: 'AI Analysis', Value: '1.8s', Trend: '→ Stable' },
+                { Metric: 'Storage I/O', Value: '12ms', Trend: '↘️ Improving' }
+            ];
+
+            const metricsContainer = document.getElementById('performanceMetrics');
+            
+            performanceData.forEach((item, index) => {
+                const metricElement = document.createElement('div');
+                metricElement.className = `glass-card fade-in-up`;
+                metricElement.style.animationDelay = `${index * 0.1}s`;
+                metricElement.style.padding = '1rem';
+                metricElement.style.margin = '0.5rem 0';
+                metricElement.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: bold; color: white;">${item.Metric}</div>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div>${item.Value}</div>
+                            <div style="color: #718096; font-size: 0.8rem;">${item.Trend}</div>
+                        </div>
+                    </div>
+                `;
+                
+                metricsContainer.appendChild(metricElement);
+            });
+        }
+
+        function initializeSecurityStatus() {
+            const securityItems = [
+                { item: "SAS Tokens", status: "✅ Active", details: "1hr expiry" },
+                { item: "Encryption", status: "✅ Enabled", details: "AES-256" },
+                { item: "Access Control", status: "✅ Configured", details: "RBAC" },
+                { item: "Audit Logs", status: "🛠️ Developing", details: "Q4 2024" }
+            ];
+
+            const securityContainer = document.getElementById('securityStatus');
+            
+            securityItems.forEach((item, index) => {
+                const securityElement = document.createElement('div');
+                securityElement.className = `glass-card fade-in-up`;
+                securityElement.style.animationDelay = `${index * 0.1}s`;
+                securityElement.style.padding = '1rem';
+                securityElement.style.margin = '0.5rem 0';
+                securityElement.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: bold; color: white;">${item.item}</div>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <div style="color: #48bb78;">${item.status}</div>
+                            <div style="color: #718096; font-size: 0.8rem;">${item.details}</div>
+                        </div>
+                    </div>
+                `;
+                
+                securityContainer.appendChild(securityElement);
+            });
+        }
+    </script>
+</body>
+</html>
