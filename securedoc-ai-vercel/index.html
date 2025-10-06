@@ -457,6 +457,23 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
         }
+        
+        /* Section styles */
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+
+        /* Chart containers */
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
@@ -593,8 +610,10 @@
                 </div>
 
                 <div class="section-header">📊 Processing Analytics</div>
-                <!-- Processing charts will be inserted here -->
-                <div id="processing-charts"></div>
+                <div class="grid grid-2">
+                    <div class="chart-container" id="overview-processing-chart"></div>
+                    <div class="chart-container" id="overview-file-types"></div>
+                </div>
             </div>
 
             <!-- Budget Analytics Section -->
@@ -626,9 +645,12 @@
 
                 <div class="subsection-header">📈 Cost Visualization</div>
                 <div class="grid grid-2">
-                    <div id="budget-gauge"></div>
-                    <div id="cost-pie"></div>
+                    <div class="chart-container" id="budget-gauge"></div>
+                    <div class="chart-container" id="cost-pie"></div>
                 </div>
+
+                <div class="subsection-header">📊 Monthly Cost Breakdown</div>
+                <div class="chart-container" id="monthly-cost-chart"></div>
             </div>
 
             <!-- Processing Analytics Section -->
@@ -661,9 +683,12 @@
 
                 <div class="subsection-header">📈 Processing Trends</div>
                 <div class="grid grid-2">
-                    <div id="processing-trend"></div>
-                    <div id="file-types"></div>
+                    <div class="chart-container" id="processing-trend"></div>
+                    <div class="chart-container" id="file-types"></div>
                 </div>
+
+                <div class="subsection-header">⏱️ Processing Time Distribution</div>
+                <div class="chart-container" id="processing-time-chart"></div>
 
                 <div class="subsection-header">🔍 Processing Insights</div>
                 <div class="grid grid-2">
@@ -833,173 +858,169 @@
                         <div id="securityStatus"></div>
                     </div>
                 </div>
+
+                <div class="subsection-header">📈 System Performance Charts</div>
+                <div class="grid grid-2">
+                    <div class="chart-container" id="cpu-usage"></div>
+                    <div class="chart-container" id="memory-usage"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Remove active class from all items
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                
-                // Add active class to clicked item
-                this.classList.add('active');
-                
-                // Show corresponding section
-                const sectionId = this.getAttribute('data-section');
-                document.getElementById(sectionId).classList.add('active');
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all charts
+            initializeCharts();
+            
+            // Get all navigation items
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            // Add click event listeners to all navigation items
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all nav items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked nav item
+                    this.classList.add('active');
+                    
+                    // Get the section to show
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show the selected section
+                    document.getElementById(sectionId).classList.add('active');
+                });
             });
-        });
 
-        // Tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs and contents
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                // Show corresponding content
-                const tabId = this.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Get the tab content to show
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Hide all tab contents
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    document.getElementById(tabId).classList.add('active');
+                });
             });
-        });
 
-        // File Upload
-        const fileUpload = document.getElementById('fileUpload');
-        const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileDetails = document.getElementById('fileDetails');
-
-        fileUpload.addEventListener('click', () => fileInput.click());
-        
-        fileInput.addEventListener('change', function(e) {
-            if (this.files.length > 0) {
-                const file = this.files[0];
-                const fileSize = (file.size / 1024).toFixed(1);
-                
-                fileDetails.innerHTML = `
-                    <div class="glass-card" style="text-align: center; padding: 1rem;">
-                        <div style="color: #667eea; font-weight: bold;">Name</div>
-                        <div style="color: white;">${file.name}</div>
-                    </div>
-                    <div class="glass-card" style="text-align: center; padding: 1rem;">
-                        <div style="color: #667eea; font-weight: bold;">Type</div>
-                        <div style="color: white;">${file.type || 'Unknown'}</div>
-                    </div>
-                    <div class="glass-card" style="text-align: center; padding: 1rem;">
-                        <div style="color: #667eea; font-weight: bold;">Size</div>
-                        <div style="color: white;">${fileSize} KB</div>
-                    </div>
-                `;
-                
-                fileInfo.style.display = 'block';
-            }
-        });
-
-        // Process Button
-        document.getElementById('processBtn').addEventListener('click', function() {
+            // File upload functionality
+            const fileUpload = document.getElementById('fileUpload');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileDetails = document.getElementById('fileDetails');
+            const processBtn = document.getElementById('processBtn');
             const processingProgress = document.getElementById('processingProgress');
-            const progressText = document.getElementById('progressText');
             const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
             const results = document.getElementById('results');
             const resultMetrics = document.getElementById('resultMetrics');
-            
-            fileInfo.style.display = 'none';
-            processingProgress.style.display = 'block';
-            
-            const steps = [
-                "📤 Uploading to secure cloud...",
-                "🔍 Analyzing document structure...",
-                "📝 Extracting text content...",
-                "📊 Identifying tables and layouts...",
-                "🎯 Generating insights..."
-            ];
-            
-            let progress = 0;
-            steps.forEach((step, index) => {
-                setTimeout(() => {
-                    progress = (index + 1) * 20;
-                    progressText.textContent = step;
-                    progressFill.style.width = `${progress}%`;
+
+            fileUpload.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
                     
-                    if (index === steps.length - 1) {
+                    fileDetails.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${file.name}</div>
+                            <div style="color: #a0aec0;">File Name</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${fileSize} MB</div>
+                            <div style="color: #a0aec0;">Size</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: white;">${file.type || 'Unknown'}</div>
+                            <div style="color: #a0aec0;">Type</div>
+                        </div>
+                    `;
+                    
+                    fileInfo.style.display = 'block';
+                }
+            });
+
+            processBtn.addEventListener('click', function() {
+                fileInfo.style.display = 'none';
+                processingProgress.style.display = 'block';
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        
                         setTimeout(() => {
                             processingProgress.style.display = 'none';
                             results.style.display = 'block';
                             
                             resultMetrics.innerHTML = `
-                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0s;">
-                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">5</div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: white;">12</div>
                                     <div style="color: #a0aec0;">Pages</div>
                                 </div>
-                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.1s;">
-                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">3</div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: white;">3,456</div>
+                                    <div style="color: #a0aec0;">Words</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: white;">2</div>
                                     <div style="color: #a0aec0;">Tables</div>
                                 </div>
-                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.2s;">
-                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">142</div>
-                                    <div style="color: #a0aec0;">Lines</div>
-                                </div>
-                                <div class="glass-card fade-in-up" style="text-align: center; padding: 1rem; animation-delay: 0.3s;">
-                                    <div style="font-size: 1.5rem; font-weight: bold; color: #667eea;">98.2%</div>
-                                    <div style="color: #a0aec0;">Confidence</div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: white;">$0.05</div>
+                                    <div style="color: #a0aec0;">Cost</div>
                                 </div>
                             `;
-                            
-                            // Show confetti effect
-                            showConfetti();
                         }, 500);
                     }
-                }, index * 1000);
+                    
+                    progressFill.style.width = `${progress}%`;
+                    
+                    if (progress < 30) {
+                        progressText.textContent = '📤 Uploading to secure cloud...';
+                    } else if (progress < 60) {
+                        progressText.textContent = '🔍 Analyzing document structure...';
+                    } else if (progress < 90) {
+                        progressText.textContent = '🤖 Extracting text with AI...';
+                    } else {
+                        progressText.textContent = '📊 Generating insights...';
+                    }
+                }, 300);
             });
+
+            // Initialize pipeline status
+            initializePipelineStatus();
+            initializeAzureServices();
+            initializePerformanceMetrics();
+            initializeSecurityStatus();
         });
 
-        // Confetti Effect
-        function showConfetti() {
-            const confettiCount = 100;
-            const colors = ['#667eea', '#764ba2', '#48bb78', '#ed8936', '#f56565'];
-            
-            for (let i = 0; i < confettiCount; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.cssText = `
-                    position: fixed;
-                    width: 10px;
-                    height: 10px;
-                    background: ${colors[Math.floor(Math.random() * colors.length)]};
-                    top: -10px;
-                    left: ${Math.random() * 100}%;
-                    animation: confetti-fall ${2 + Math.random() * 3}s linear forwards;
-                    z-index: 1000;
-                    border-radius: 2px;
-                `;
-                
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 5000);
-            }
-        }
-
-        // Add confetti animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes confetti-fall {
-                to {
-                    transform: translateY(100vh) rotate(${360 * 3}deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Initialize Charts
-        document.addEventListener('DOMContentLoaded', function() {
-            // Budget Gauge
+        function initializeCharts() {
+            // Budget Gauge Chart
             const budgetGauge = {
                 type: "indicator",
                 mode: "gauge+number+delta",
@@ -1029,6 +1050,7 @@
             const gaugeLayout = {
                 height: 300,
                 paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
                 font: { color: "white" },
                 margin: { t: 50, b: 10, l: 10, r: 10 }
             };
@@ -1042,12 +1064,14 @@
                 type: 'pie',
                 marker: {
                     colors: ['#667eea', '#764ba2', '#48bb78', '#ed8936', '#f56565']
-                }
+                },
+                hole: 0.4
             };
 
             const pieLayout = {
-                title: 'Monthly Cost Distribution',
+                title: { text: 'Monthly Cost Distribution', font: { color: 'white', size: 16 } },
                 paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
                 font: { color: "white" },
                 legend: { font: { color: 'white' } },
                 height: 300
@@ -1055,12 +1079,162 @@
 
             Plotly.newPlot('cost-pie', [costPie], pieLayout);
 
-            // Initialize other sections
-            initializePipelineStatus();
-            initializeAzureServices();
-            initializePerformanceMetrics();
-            initializeSecurityStatus();
-        });
+            // Monthly Cost Chart
+            const monthlyCostTrace = {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                y: [0.15, 0.22, 0.18, 0.25, 0.30, 0.28, 0.32, 0.35, 0.38, 0.42],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Monthly Cost',
+                line: { color: '#667eea', width: 3 },
+                marker: { size: 8, color: '#764ba2' }
+            };
+
+            const monthlyCostLayout = {
+                title: { text: 'Monthly Cost Trend ($)', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                height: 300
+            };
+
+            Plotly.newPlot('monthly-cost-chart', [monthlyCostTrace], monthlyCostLayout);
+
+            // Processing Trend Chart
+            const processingTrendTrace = {
+                x: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                y: [45, 52, 38, 61, 55, 28, 42],
+                type: 'bar',
+                name: 'Documents Processed',
+                marker: { color: '#667eea' }
+            };
+
+            const processingTrendLayout = {
+                title: { text: 'Daily Processing Volume', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                height: 300
+            };
+
+            Plotly.newPlot('processing-trend', [processingTrendTrace], processingTrendLayout);
+
+            // File Types Chart
+            const fileTypesData = [{
+                values: [45, 25, 20, 10],
+                labels: ['PDF', 'Images', 'Word', 'Text'],
+                type: 'pie',
+                marker: {
+                    colors: ['#667eea', '#764ba2', '#48bb78', '#ed8936']
+                }
+            }];
+
+            const fileTypesLayout = {
+                title: { text: 'Document Types Processed', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                legend: { font: { color: 'white' } },
+                height: 300
+            };
+
+            Plotly.newPlot('file-types', fileTypesData, fileTypesLayout);
+
+            // Processing Time Chart
+            const processingTimeTrace = {
+                x: ['<1s', '1-2s', '2-3s', '3-5s', '>5s'],
+                y: [15, 45, 25, 10, 5],
+                type: 'bar',
+                marker: { color: '#48bb78' }
+            };
+
+            const processingTimeLayout = {
+                title: { text: 'Processing Time Distribution', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                height: 300
+            };
+
+            Plotly.newPlot('processing-time-chart', [processingTimeTrace], processingTimeLayout);
+
+            // Overview Processing Chart
+            const overviewProcessingTrace = {
+                x: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM'],
+                y: [12, 18, 15, 22, 19, 25, 28, 24],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Documents/Hour',
+                line: { color: '#667eea', width: 3 },
+                marker: { size: 6, color: '#764ba2' }
+            };
+
+            const overviewProcessingLayout = {
+                title: { text: 'Today\'s Processing Activity', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                height: 300
+            };
+
+            Plotly.newPlot('overview-processing-chart', [overviewProcessingTrace], overviewProcessingLayout);
+
+            // CPU Usage Chart
+            const cpuUsageTrace = {
+                x: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM'],
+                y: [25, 30, 45, 35, 28, 40, 38, 32],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'CPU Usage',
+                line: { color: '#f56565', width: 3 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(245, 101, 101, 0.2)'
+            };
+
+            const cpuUsageLayout = {
+                title: { text: 'CPU Usage (%)', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)', range: [0, 100] },
+                height: 300
+            };
+
+            Plotly.newPlot('cpu-usage', [cpuUsageTrace], cpuUsageLayout);
+
+            // Memory Usage Chart
+            const memoryUsageTrace = {
+                x: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM'],
+                y: [65, 70, 75, 68, 72, 78, 74, 70],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Memory Usage',
+                line: { color: '#ed8936', width: 3 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(237, 137, 54, 0.2)'
+            };
+
+            const memoryUsageLayout = {
+                title: { text: 'Memory Usage (%)', font: { color: 'white', size: 16 } },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: 'white' },
+                xaxis: { gridcolor: 'rgba(255,255,255,0.1)' },
+                yaxis: { gridcolor: 'rgba(255,255,255,0.1)', range: [0, 100] },
+                height: 300
+            };
+
+            Plotly.newPlot('memory-usage', [memoryUsageTrace], memoryUsageLayout);
+        }
 
         function initializePipelineStatus() {
             const pipelineSteps = [
