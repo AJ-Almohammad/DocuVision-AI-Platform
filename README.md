@@ -36,7 +36,7 @@
 ### 📋 Project Portfolio
 **Complete documentation & architecture**
 
-[**View Portfolio →**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html?raw=true)
+[**View Portfolio →**](https://htmlpreview.github.io/?https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
 
 *Features: Architecture diagrams • Technical specs • Case studies*
 
@@ -486,7 +486,7 @@ We welcome contributions! Here's how you can help:
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/ameralmohammad)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github)](https://github.com/AJ-Almohammad)
 [![Email](https://img.shields.io/badge/Email-Contact-D14836?style=for-the-badge&logo=gmail)](mailto:ajaber1973@web.de)
-[![Portfolio](https://img.shields.io/badge/Portfolio-View-FF6B6B?style=for-the-badge&logo=google-chrome)](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
+[![Portfolio](https://img.shields.io/badge/Portfolio-View-FF6B6B?style=for-the-badge&logo=google-chrome)](https://htmlpreview.github.io/?https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
 
 </div>
 
@@ -514,7 +514,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 [🐛 Report Bug](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/issues) • 
 [💡 Request Feature](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/issues) • 
-[📖 Documentation](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html) • 
+[📖 Documentation](https://htmlpreview.github.io/?https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html) • 
 [💬 Discussions](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/discussions)
 
 ---
