@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureDoc AI - Project Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #b967ff;
+            --neon-pink: #ff2a6d;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(16, 16, 32, 0.8);
+            --sidebar-bg: rgba(10, 15, 30, 0.95);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(125deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            border-right: 1px solid rgba(0, 243, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent 48%, rgba(0, 243, 255, 0.05) 50%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(185, 103, 255, 0.05) 50%, transparent 52%);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        .logo {
+            padding: 30px 25px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.1) 0%, rgba(185, 103, 255, 0.1) 100%);
+        }
+
+        .logo h1 {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 25px 0;
+        }
+
+        .nav-links li {
+            padding: 15px 25px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            margin: 5px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-links li:hover::before {
+            left: 100%;
+        }
+
+        .nav-links li:hover {
+            background: rgba(0, 243, 255, 0.1);
+            border-left-color: var(--neon-blue);
+        }
+
+        .nav-links li.active {
+            background: rgba(0, 243, 255, 0.15);
+            border-left-color: var(--neon-blue);
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        .nav-links i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(185, 103, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .user-details div:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-details div:last-child {
+            font-size: 0.9rem;
+            color: var(--neon-blue);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .stat-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Section Styles */
+        .section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.6rem;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+
+        .view-all {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border: 1px solid var(--neon-blue);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .view-all:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card {
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .item-card:hover::before {
+            left: 100%;
+        }
+
+        .item-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .item-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .btn-outline:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-active {
+            background: rgba(57, 255, 20, 0.2);
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+        }
+
+        .status-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid #ffc107;
+        }
+
+        .status-danger {
+            background: rgba(255, 42, 109, 0.2);
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(0, 243, 255, 0.3);
+            margin-top: 40px;
+        }
+
+        /* Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .nav-links {
+                display: flex;
+                overflow-x: auto;
+                padding: 15px 0;
+            }
+            
+            .nav-links li {
+                flex-shrink: 0;
+                border-left: none;
+                border-bottom: 4px solid transparent;
+            }
+            
+            .nav-links li.active {
+                border-left: none;
+                border-bottom: 4px solid var(--neon-blue);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1><i class="fas fa-shield-alt"></i> SecureDoc AI</h1>
+                <p>DOCUMENT INTELLIGENCE PLATFORM</p>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> Documents</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#"><i class="fas fa-cogs"></i> Processing</a></li>
+                <li><a href="#"><i class="fas fa-cloud"></i> Azure Services</a></li>
+                <li><a href="#"><i class="fas fa-code"></i> Source Code</a></li>
+                <li><a href="#"><i class="fas fa-book"></i> Documentation</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Project Structure Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">AA</div>
+                    <div class="user-details">
+                        <div>Amer Almohammad</div>
+                        <div>Data Engineer & Cloud Specialist</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: var(--neon-blue);">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>28</h3>
+                        <p>Project Files</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: var(--neon-green);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p>Azure Services</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: var(--neon-purple);">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Python Scripts</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: var(--neon-pink);">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>100%</h3>
+                        <p>Production Ready</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboards Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> Interactive Dashboards</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>AI Document Processing Dashboard</h3>
+                            <p>Real-time monitoring of document processing pipeline with Azure AI services</p>
+                            <span class="status-badge status-active">Live</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-primary" onclick="openFile('dashboard_enhanced.py')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Project Architecture Dashboard</h3>
+                            <p>Complete project structure explorer with file linking</p>
+                            <span class="status-badge status-active">Interactive</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-primary" onclick="openFile('SecureDoc AI - Interactive Architecture Dashboard.html')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scripts Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tools"></i> Scripts & Automation</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Azure Setup</h3>
+                            <p>Initial cloud infrastructure configuration and service deployment</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('scripts/azure_setup.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Process Document</h3>
+                            <p>Main document processing pipeline with AI integration</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('scripts/process_document.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Check Costs</h3>
+                            <p>Monitor and analyze Azure spending and resource usage</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('scripts/check_costs.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Create Test PDF</h3>
+                            <p>Generate test documents for pipeline validation</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('scripts/create_test_pdf.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Source Code Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-code"></i> Core Source Code</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Storage Client</h3>
+                            <p>Azure Blob Storage integration with SAS token authentication</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('src/data_ingestion/storage_client.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Document Processor</h3>
+                            <p>AI-powered document analysis with Azure Document Intelligence</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('src/data_processing/document_processor.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>API Main</h3>
+                            <p>FastAPI backend with authentication and document endpoints</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('src/api/main.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Authentication</h3>
+                            <p>Secure API key authentication and access control</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('src/auth/authentication.py')">
+                                <i class="fas fa-code"></i> View Code
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documentation Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-book"></i> Documentation</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Project README</h3>
+                            <p>Complete project overview, setup guide, and architecture documentation</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('README.md')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Amer Almohammad - CV</h3>
+                            <p>Professional resume and project portfolio</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('docs/Amer-Almohammad-Data-Engineer-CV-2024.md')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>Cover Letter Template</h3>
+                            <p>Professional cover letter template for job applications</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('docs/COVER_LETTER_TEMPLATE.md')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-info">
+                            <h3>GitHub Setup Guide</h3>
+                            <p>Repository setup and contribution guidelines</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline" onclick="openFile('GITHUB_SETUP.md')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>SecureDoc AI Platform &copy; 2024 | Built with Azure AI Services | Last updated: Today</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File opening functionality
+        function openFile(filePath) {
+            // In a real implementation, this would open the actual file
+            // For demo purposes, we'll show an alert and simulate GitHub opening
+            const fileName = filePath.split('/').pop();
+            alert(`Opening: ${fileName}\n\nIn the actual implementation, this would open:\nhttps://github.com/your-username/tuv-sud-document-ai-platform/blob/main/${filePath}`);
+            
+            // Simulate GitHub opening (comment out in production)
+            // window.open(`https://github.com/your-username/tuv-sud-document-ai-platform/blob/main/${filePath}`, '_blank');
+        }
+
+        // Add interactivity to navigation
+        document.querySelectorAll('.nav-links li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-links li').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.item-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add pulse animation to stats cards
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+
+        // Initialize with some random data updates for demo
+        setInterval(() => {
+            const statNumbers = document.querySelectorAll('.stat-info h3');
+            statNumbers.forEach(stat => {
+                const current = parseInt(stat.textContent);
+                if (!isNaN(current)) {
+                    const change = Math.random() * 2 - 1; // Random change between -1 and 1
+                    const newValue = Math.max(1, Math.round(current + change));
+                    if (newValue !== current) {
+                        stat.textContent = newValue;
+                        stat.style.animation = 'pulse 0.5s ease';
+                        setTimeout(() => {
+                            stat.style.animation = '';
+                        }, 500);
+                    }
+                }
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

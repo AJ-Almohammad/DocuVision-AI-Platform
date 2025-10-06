@@ -1,39 +1,83 @@
-# Python
+# ========================
+# PYTHON BUILD AND CACHE
+# ========================
 __pycache__/
 *.py[cod]
 *.so
 .Python
+
+# ========================
+# VIRTUAL ENVIRONMENTS
+# ========================
 env/
 venv/
 .venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ========================
+# ENVIRONMENT VARIABLES & SECRETS
+# ========================
 .env
-.venv
+.env.*
 .env.local
 .env.production
+*.env*
+secrets.*
+config/secrets.*
+connection_strings.*
 
-# Azure
+# ========================
+# AZURE / CLOUD CONFIG
+# ========================
+.azure/
 *.pem
 *.pfx
 *.cer
 *.crt
 *.key
 
-# Jupyter Notebook
+# ========================
+# JUPYTER NOTEBOOKS
+# ========================
 .ipynb_checkpoints
 
-# IDE
+# ========================
+# DEVELOPMENT & IDE FILES
+# ========================
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 
-# Logs
+# ========================
+# LOGS
+# ========================
 *.log
 logs/
+*.out
 
-# macOS
+# ========================
+# SYSTEM FILES
+# ========================
 .DS_Store
+Thumbs.db
 
-# Secrets - EXTRA PROTECTION
-secrets.*
-*.env*
-config/secrets.*
-connection_strings.*
+# ========================
+# REPORTS, TEST, & GENERATED DOCS
+# ========================
+professional_technical_report.pdf
+sample_technical_report.pdf
+sample_data.txt
+*.pdf
+docs/*.pdf
+
+# ========================
+# TEMPORARY & MISC FILES
+# ========================
+tmp/
+temp/
+*.bak
+*.swp
+*.tmp
