@@ -17,14 +17,12 @@
 | Dashboard | Platform | Live URL | Description |
 |-----------|----------|----------|-------------|
 | **📊 Main Dashboard** | Vercel | [**securedoc-ai-dashboard.vercel.app**](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app) | Interactive HTML dashboard with real-time analytics |
-| **🔧 Streamlit Backend** | Azure | [**securedoc-ai-amer.azurewebsites.net**](https://securedoc-ai-amer.azurewebsites.net) | Python backend with AI document processing |
-| **📋 Project Portfolio** | Vercel | [**View Portfolio**](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app/portfolio.html) | Comprehensive project documentation & architecture |
+| **📋 Project Portfolio** | GitHub | [**View Portfolio**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html) | Comprehensive project documentation & architecture |
 
 ### 🎯 **Quick Access**
 \\\ash
 # Live Dashboard: https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app
-# Backend API: https://securedoc-ai-amer.azurewebsites.net
-# Portfolio: https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app/portfolio.html
+# Project Portfolio: https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html
 \\\
 
 ---
@@ -100,9 +98,6 @@ python -m http.server 8000
 
 ### Production Deployment
 \\\ash
-# Deploy to Azure App Service
-git push azure main
-
 # Deploy to Vercel
 cd securedoc-ai-vercel
 vercel --prod
@@ -110,7 +105,6 @@ vercel --prod
 
 ## 📁 Project Structure
 
-\\\
 DocuVision-AI-Platform/
 ├── 🌐 Live Deployments
 │   ├── securedoc-ai-vercel/          # Vercel Dashboard (Production)
@@ -147,7 +141,6 @@ DocuVision-AI-Platform/
     │   └── COVER_LETTER_TEMPLATE.md
     ├── requirements.txt
     └── README.md
-\\\
 
 ## 🔌 API Documentation
 
@@ -175,17 +168,6 @@ response = requests.post(
 \\\
 
 ## 🌐 Deployment
-
-### Azure App Service (Backend)
-\\\yaml
-# Startup Command
-streamlit run dashboard_enhanced.py --server.port \8501 --server.address 0.0.0.0
-
-# Environment Variables
-AZURE_STORAGE_CONNECTION_STRING: <your-connection-string>
-AZURE_FORM_RECOGNIZER_ENDPOINT: <your-endpoint>
-AZURE_FORM_RECOGNIZER_KEY: <your-key>
-\\\
 
 ### Vercel (Frontend)
 - **Framework**: Static HTML
@@ -215,12 +197,12 @@ mypy src/
 ## 👨‍💻 Author
 
 **Amer Almohammad**  
-*Data Engineer & Cloud Solutions Architect*
+*AWS Junior Cloud Engineer | Solutions Architect*
 
 - 📧 **Email**: ajaber1973@web.de
 - 💼 **LinkedIn**: [Amer Almohammad](https://linkedin.com/in/ameralmohammad)
 - 🐙 **GitHub**: [AJ-Almohammad](https://github.com/AJ-Almohammad)
-- 🌐 **Portfolio**: [Live Portfolio](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app/portfolio.html)
+- 🌐 **Portfolio**: [Project Portfolio](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
 
 ## 📄 License
 
@@ -236,6 +218,6 @@ If this project helped you, please give it a star on GitHub!
 
 [**🐛 Report Bug**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/issues) • 
 [**💡 Request Feature**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/issues) • 
-[**📖 View Documentation**](https://securedoc-ai-dashboard-bsipgjkwj-ajalmohammads-projects.vercel.app/portfolio.html)
+[**📖 View Documentation**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/cloud-deployment-portfolio.html)
 
 </div>
