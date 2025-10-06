@@ -197,7 +197,7 @@ mypy src/
 ## 👨‍💻 Author
 
 **Amer Almohammad**  
-*AWS Junior Cloud Engineer | Solutions Architect*
+*AWS Junior Cloud Engineer | AWS Junior Solutions Architect*
 
 - 📧 **Email**: ajaber1973@web.de
 - 💼 **LinkedIn**: [Amer Almohammad](https://linkedin.com/in/ameralmohammad)
