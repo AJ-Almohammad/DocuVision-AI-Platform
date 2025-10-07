@@ -13,7 +13,25 @@
 
 ---
 
-## 🚀 Live Demo
+## 🎬 Live Platform Demo
+
+<div align="center">
+
+### 🚀 **Watch DocuVision AI in Action**
+
+[![Video Demo](https://img.shields.io/badge/▶️-Watch%20Live%20Demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/raw/main/Live-SecureDoc%20AI-Azure%20Platform.mp4)
+
+**🎥 Full Platform Walkthrough** | Azure Document Intelligence in Production
+
+*See real-time document processing, AI-powered analytics, and enterprise features*
+
+[**📥 Download Video**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/raw/main/Live-SecureDoc%20AI-Azure%20Platform.mp4) • [**🌐 View on GitHub**](https://github.com/AJ-Almohammad/DocuVision-AI-Platform/blob/main/Live-SecureDoc%20AI-Azure%20Platform.mp4)
+
+</div>
+
+---
+
+## 🚀 Live Demo Dashboards
 
 ### 🎪 **Experience the Platform**
 
